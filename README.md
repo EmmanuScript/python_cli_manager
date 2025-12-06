@@ -30,6 +30,8 @@ task-manager update 0 done
 - **Update task status** (todo, in_progress, done, blocked)
 - **Task persistence** to disk
 - **Basic CLI interface** with argparse
+- **Notification system** with due date alerts, status change notifications, and task event tracking
+- **Notification management** with read/unread status, filtering, and notification history
 
 ### Partially Implemented ⚠️
 
@@ -46,15 +48,14 @@ The following features are documented in the code but not yet implemented:
 4. **Error handling**: Validation for file operations, task boundaries, input validation
 5. **User roles**: Task assignment with role-based access control
 6. **Recurring tasks**: Repeat task scheduling
-7. **Notifications**: Alert system for due dates and task updates
-8. **Database backend**: Currently uses pickle file format; SQL support planned
-9. **Multi-user support**: Single-user only; concurrent access not handled
-10. **Task dependencies**: Ability to mark tasks as blocking other tasks
-11. **CSV export**: CSV format export mentioned in CLI but format always uses pickle
-12. **Undo/redo**: Change history and reversal
-13. **Performance optimization**: Indexing and search optimization
-14. **API layer**: REST API for task operations (CLI-only currently)
-15. **Configuration file**: Uses hardcoded settings; config file loading not implemented
+7. **Database backend**: Currently uses pickle file format; SQL support planned
+8. **Multi-user support**: Single-user only; concurrent access not handled
+9. **Task dependencies**: Ability to mark tasks as blocking other tasks
+10. **CSV export**: CSV format export mentioned in CLI but format always uses pickle
+11. **Undo/redo**: Change history and reversal
+12. **Performance optimization**: Indexing and search optimization
+13. **API layer**: REST API for task operations (CLI-only currently)
+14. **Configuration file**: Uses hardcoded settings; config file loading not implemented
 
 ## Project Structure
 
@@ -127,6 +128,35 @@ task-manager export [--format <json|csv>]
 ```
 
 **Note:** Currently saves in pickle format regardless of --format parameter.
+
+### Check Notifications
+
+```bash
+task-manager notify [--list] [--unread]
+```
+
+**Options:**
+
+- No arguments: Check for new notifications (due dates, status changes, etc.)
+- `--list`: Show all notifications in history
+- `--unread`: Show only unread notifications
+
+**Example:**
+
+```bash
+task-manager notify
+task-manager notify --list
+task-manager notify --unread
+```
+
+The notification system automatically detects:
+
+- **Overdue tasks**: Tasks with due dates in the past
+- **Due soon**: Tasks due within 24 hours
+- **Status changes**: When task status is updated
+- **Completed tasks**: When a task is marked done
+- **Blocked tasks**: When a task is marked blocked
+- **Assigned tasks**: When a task is assigned to a user
 
 ## Known Issues
 
