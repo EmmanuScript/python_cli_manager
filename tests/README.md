@@ -37,6 +37,7 @@ task-manager update 0 done
 
 - **Task filtering**: Works for status and priority, but no search by keyword
 - **Export functionality**: Parameter for format selection exists but not implemented
+- **Bulk operations**: Command structure defined, but update logic not yet implemented
 
 ### Not Yet Implemented ✗
 
@@ -128,6 +129,48 @@ task-manager export [--format <json|csv>]
 ```
 
 **Note:** Currently saves in pickle format regardless of --format parameter.
+
+### Bulk Update Tasks
+
+```bash
+task-manager bulk-update [--status <status>] [--priority <priority>] [--assigned <user>] [--filter-status <status>] [--filter-priority <priority>]
+```
+
+**Purpose:** Update multiple tasks at once based on filter criteria.
+
+**Flags:**
+
+- `--filter-status`: Only update tasks with this status (todo, in_progress, done, blocked)
+- `--filter-priority`: Only update tasks with this priority (low, medium, high)
+- `--status`: Set new status for matching tasks
+- `--priority`: Set new priority for matching tasks
+- `--assigned`: Set new assignee for matching tasks
+
+**Behavior:**
+
+- At least one filter flag (`--filter-status` or `--filter-priority`) is required
+- At least one update flag (`--status`, `--priority`, or `--assigned`) is required
+- Command applies all specified updates to all tasks matching the filters
+- Returns count of updated tasks
+
+**Examples:**
+
+```bash
+# Mark all in-progress tasks as done
+task-manager bulk-update --filter-status in_progress --status done
+
+# Re-assign all high-priority tasks to alice
+task-manager bulk-update --filter-priority high --assigned alice
+
+# Lower priority of all blocked tasks and reassign to bob
+task-manager bulk-update --filter-status blocked --priority medium --assigned bob
+```
+
+**Output:**
+
+```
+✓ Updated 3 tasks: Changed status to 'done'
+```
 
 ### Check Notifications
 
